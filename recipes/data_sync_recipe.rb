@@ -28,3 +28,12 @@ task :remote_db_runner do
   remote_db_download
   remote_db_cleanup
 end
+
+desc "Downloads the files in public/system"
+task :download_files, :roles => :db, :only => { :primary => true } do
+  `mkdir -p public/system`
+  execute_on_servers(options) do |servers|
+    logger.info "Pulling public/system via rsync"
+    `rsync --delete -r #{user}@#{servers.first}:#{deploy_to}/#{current_dir}/public/system/* public/system`  
+  end
+end
