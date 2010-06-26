@@ -33,23 +33,30 @@ namespace :db do
 
   desc "Loads the production data downloaded into db/production_data.sql into your local development database" 
   task :production_data_load => :environment do
+
     abcs = ActiveRecord::Base.configurations
-    
+
     case abcs[RAILS_ENV]["adapter"]
       when 'mysql'
         ActiveRecord::Base.establish_connection(abcs[RAILS_ENV])
         
         commands = []
         commands << "mysql"
-        commands << "-h #{abcs[RAILS_ENV]["host"]}"
+        if abcs[RAILS_ENV]["host"].present?
+          commands << "-h #{abcs[RAILS_ENV]["host"]}"
+        end
         commands << "-u #{abcs[RAILS_ENV]["username"]}"
         if abcs[RAILS_ENV]["password"].present?          
           commands << "-p#{abcs[RAILS_ENV]["password"]}"
         end
         commands << "#{abcs[RAILS_ENV]["database"]}"
         commands << " < db/production_data.sql"                  
-        
-        `#{commands.join(' ')}`        
+
+        result = `#{commands.join(' ')}`        
+
+        if result.present?
+          puts result
+        end
       else
         raise "Task not supported by '#{abcs[RAILS_ENV]['adapter']}'" 
     end
