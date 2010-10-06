@@ -2,32 +2,32 @@ namespace :db do
   desc "Refreshes your local development environment to the current production database" 
   task :pull do
     `cap remote_db_runner`
-    `rake db:production_data_load --trace`
+    `rake db:production_data_load`
   end
   
   desc "Dump the current database to a MySQL file" 
   task :database_dump => :environment do
     abcs = ActiveRecord::Base.configurations
-    
-    case abcs[RAILS_ENV]["adapter"]
+
+    case abcs[Rails.env]["adapter"]
       when 'mysql'
-        ActiveRecord::Base.establish_connection(abcs[RAILS_ENV])
+        ActiveRecord::Base.establish_connection(abcs[Rails.env])
         
-        File.open("db/#{RAILS_ENV}_data.sql", "w+") do |f|
+        File.open("db/#{Rails.env}_data.sql", "w+") do |f|
           commands = []
           commands << "mysqldump"
-          commands << "-h #{abcs[RAILS_ENV]["host"]}"
-          commands << "-u #{abcs[RAILS_ENV]["username"]}"
-          if abcs[RAILS_ENV]["password"].present?          
-            commands << "-p#{abcs[RAILS_ENV]["password"]}"
+          commands << "-h #{abcs[Rails.env]["host"]}"
+          commands << "-u #{abcs[Rails.env]["username"]}"
+          if abcs[Rails.env]["password"].present?          
+            commands << "-p#{abcs[Rails.env]["password"]}"
           end
-          commands << "#{abcs[RAILS_ENV]["database"]}"
+          commands << "#{abcs[Rails.env]["database"]}"
           commands << " > db/production_data.sql"          
           
           `#{commands.join(' ')}`          
         end
       else
-        raise "Task not supported by '#{abcs[RAILS_ENV]['adapter']}'" 
+        raise "Task not supported by '#{abcs[Rails.env]['adapter']}'" 
     end
   end
 
@@ -36,20 +36,20 @@ namespace :db do
 
     abcs = ActiveRecord::Base.configurations
 
-    case abcs[RAILS_ENV]["adapter"]
+    case abcs[Rails.env]["adapter"]
       when 'mysql'
-        ActiveRecord::Base.establish_connection(abcs[RAILS_ENV])
+        ActiveRecord::Base.establish_connection(abcs[Rails.env])
         
         commands = []
         commands << "mysql"
-        if abcs[RAILS_ENV]["host"].present?
-          commands << "-h #{abcs[RAILS_ENV]["host"]}"
+        if abcs[Rails.env]["host"].present?
+          commands << "-h #{abcs[Rails.env]["host"]}"
         end
-        commands << "-u #{abcs[RAILS_ENV]["username"]}"
-        if abcs[RAILS_ENV]["password"].present?          
-          commands << "-p#{abcs[RAILS_ENV]["password"]}"
+        commands << "-u #{abcs[Rails.env]["username"]}"
+        if abcs[Rails.env]["password"].present?          
+          commands << "-p#{abcs[Rails.env]["password"]}"
         end
-        commands << "#{abcs[RAILS_ENV]["database"]}"
+        commands << "#{abcs[Rails.env]["database"]}"
         commands << " < db/production_data.sql"                  
 
         result = `#{commands.join(' ')}`        
@@ -58,7 +58,7 @@ namespace :db do
           puts result
         end
       else
-        raise "Task not supported by '#{abcs[RAILS_ENV]['adapter']}'" 
+        raise "Task not supported by '#{abcs[Rails.env]['adapter']}'" 
     end
   end
 end

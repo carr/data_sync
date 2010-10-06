@@ -9,7 +9,13 @@ Install
 
 To install, just add Data sync to your `vendor/plugins` directory:
 
-    script/plugin install git://github.com/carr/data_sync.git
+    rails plugin install git://github.com/carr/data_sync.git
+
+Requirements
+============
+
+ * Capistrano
+ * add <tt>gem capistrano</tt> to your Gemfile
 
 Usage
 =====
