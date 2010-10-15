@@ -85,12 +85,12 @@ namespace :db do
         commands = []
         commands << "cd #{Rails.root.join('db')}"
         commands << "tar -xjf #{Rails.root.join('db', 'production_data.tar.bz2')}"
-        commands << "mongorestore --db #{databases[Rails.env]['database']} #{Rails.root.join('db', 'dump', databases[Rails.env]['database'])}"
+        commands << "mongorestore --db #{databases[Rails.env]['database']} #{Rails.root.join('db', 'dump', databases['production']['database'])}"
         commands << "rm -fr #{Rails.root.join('db', 'dump')} #{Rails.root.join('db', 'production_data.tar.bz2')}"
+
         `#{commands.join(' && ')}`
       else
         raise "Task not supported by '#{databases[Rails.env]['adapter']}'"
     end
   end
 end
-
