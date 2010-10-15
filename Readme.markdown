@@ -45,17 +45,17 @@ And initalizer for MongoDB in config/initializers/mongo.rb
     database_configurations = YAML::load(File.read(Rails.root.join('config', 'database.yml')))
 
     if database_configurations[Rails.env] && database_configurations[Rails.env]['adapter'] == 'mongodb'
-    database = database_configurations[Rails.env]
-    database['port'] ||= default_mongodb_port
+        database = database_configurations[Rails.env]
+        database['port'] ||= default_mongodb_port
 
-    MongoMapper.connection = Mongo::Connection.new(database['hostname'], database['port'])
-    MongoMapper.database = database['database']
+        MongoMapper.connection = Mongo::Connection.new(database['hostname'], database['port'])
+        MongoMapper.database = database['database']
 
-    if defined?(PhusionPassenger)
-        PhusionPassenger.on_event(:starting_worker_process) do |forked|
-            MongoMapper.connection.connect_to_master if forked
+        if defined?(PhusionPassenger)
+            PhusionPassenger.on_event(:starting_worker_process) do |forked|
+                MongoMapper.connection.connect_to_master if forked
+            end
         end
-    end
     end
 
 TODO
