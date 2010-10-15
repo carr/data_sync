@@ -30,8 +30,7 @@ namespace :db do
           commands << "tar -cjf #{Rails.root.join('db', 'production_data.tar.bz2')} production_data.sql"
           commands << "rm -fr #{Rails.root.join('db', 'production_data.sql')}"
 
-#          `#{commands.join(' && ')}`
-          puts commands.join(' && ')
+          `#{commands.join(' && ')}`
       when 'mongodb'
         port = databases[Rails.env]['port']
         port ||= 27017 # default mongodb port
@@ -81,12 +80,7 @@ namespace :db do
 
           commands << "rm -fr #{Rails.root.join('db', 'production_data.tar.bz2')} #{Rails.root.join('db', 'production_data.sql')}"
 
-          puts commands.join(' && ')
-
-          #result = `#{commands.join(' ')}`
-          #if result.present?
-          # puts result
-          # end
+          `#{commands.join(' && ')}`
       when 'mongodb'
         commands = []
         commands << "cd #{Rails.root.join('db')}"
