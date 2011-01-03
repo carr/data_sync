@@ -10,7 +10,7 @@ namespace :db do
     databases = YAML::load(File.open(Rails.root.join('config', 'database.yml')))
 
     case databases[Rails.env]["adapter"]
-      when 'mysql'
+      when /mysql/
         ActiveRecord::Base.establish_connection(databases[Rails.env])
 
           commands = []
@@ -58,7 +58,7 @@ namespace :db do
     end
 
     case databases[Rails.env]["adapter"]
-      when 'mysql'
+      when /mysql/
 #        ActiveRecord::Base.establish_connection(databases[Rails.env])
 
           commands = []
